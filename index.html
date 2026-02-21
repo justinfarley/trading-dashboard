@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TRADING DASHBOARD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<header>
+  <div class="logo">LSMC <span>/</span> TRADING DASHBOARD</div>
+  <div class="status-bar">
+    <div><span class="status-dot"></span> PAPER TRADING</div>
+    <div class="last-update" id="lastUpdate">LOADING...</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STAT CARDS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Current Wealth</div>
+      <div class="stat-value" id="currentWealth">—</div>
+      <div class="stat-sub" id="wealthChange">—</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">Total Return</div>
+      <div class="stat-value" id="totalReturn">—</div>
+      <div class="stat-sub" id="initialWealth">—</div>
+    </div>
+  </div>
+
+  <!-- CHART + WEIGHTS -->
+  <div class="middle-row">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Wealth Over Time</span>
+        <span class="panel-badge" id="chartPeriods">— periods</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="wealthChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Current Weights</span>
+        <span class="panel-badge">LATEST</span>
+      </div>
+      <div class="weights-container" id="weightsContainer">
+        <div class="empty-state" style="padding:30px">
+          <span style="color:var(--border);font-size:24px;display:block;margin-bottom:8px">▓▓▓</span>
+          No data yet
+        </div>
+      </div>
+
+      <hr class="section-divider"/>
+
+      <div class="penalty-section">
+        <div class="penalty-label">Risk Penalty (λ)</div>
+        <div class="penalty-track">
+          <div class="penalty-fill" id="penaltyFill" style="width:0%"></div>
+        </div>
+        <div class="penalty-ticks">
+          <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRADE LOG -->
+  <div class="log-panel">
+    <div class="panel-header">
+      <span class="panel-title">Trade Log</span>
+      <span class="panel-badge" id="logCount">0 entries</span>
+    </div>
+    <div class="scroll-wrapper">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Action</th>
+            <th>Ticker</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Value</th>
+            <th>Penalty</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">
+                <span class="big">◌</span>
+                No trade logs found. Run the trading script to populate.
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="implementation.js"></script>
+</body>
+</html>

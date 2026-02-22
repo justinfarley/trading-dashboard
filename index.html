@@ -82,14 +82,14 @@
     <div class="scroll-wrapper">
       <table class="log-table">
         <thead>
-          <tr>
-            <th>Timestamp</th>
-            <th>Action</th>
-            <th>Ticker</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Value</th>
-          </tr>
+            <tr>
+            <th><span>Timestamp</span></th>
+            <th><span class="th-wrapper">Action<span class="tooltip">BUY or SELL order type</span></span></th>
+            <th><span class="th-wrapper">Ticker<span class="tooltip">Stock symbol traded</span></span></th>
+            <th><span class="th-wrapper">Qty<span class="tooltip">Number of shares traded</span></span></th>
+            <th><span class="th-wrapper">Price<span class="tooltip">Price per share at time of trade</span></span></th>
+            <th><span class="th-wrapper">Value<span class="tooltip">Total dollar value of the trade (Qty × Price)</span></span></th>
+            </tr>
         </thead>
         <tbody id="logBody">
           <tr>

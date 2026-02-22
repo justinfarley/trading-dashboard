@@ -400,6 +400,41 @@ function updateLastUpdated() {
   el.textContent = 'LAST SYNC: ' + new Date().toLocaleString().slice(0, 25).toUpperCase();
 }
 
+function renderCountdown() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDate();
+
+  let nextDate;
+  if (day < 15) {
+    nextDate = new Date(Date.UTC(year, month, 15, 15, 0, 0));
+  } else {
+    nextDate = new Date(Date.UTC(year, month + 1, 1, 15, 0, 0));
+  }
+
+  const diff = nextDate - now;
+  const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+  const localTime = nextDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+    timeZone: 'America/New_York'
+  });
+
+  const localDate = nextDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'America/New_York'
+  });
+
+  const el = document.getElementById('nextTradeCountdown');
+  if (el) el.textContent = `NEXT TRADE ${days}d ${hours}h ${minutes}m · ${localDate} ${localTime}`;
+}
+
 async function refresh() {
   const [rows, logs, dailyRows] = await Promise.all([
     loadAccountHistory(),
@@ -410,6 +445,8 @@ async function refresh() {
   const liveWealth = dailyRows?.length > 0 ? dailyRows[dailyRows.length - 1].wealth : null;
 
   renderStats(rows, liveWealth);
+  renderCountdown();
+  setInterval(renderCountdown, 60000);
   renderWeights(rows);
   renderPenalty(logs);
   renderLogs(logs);

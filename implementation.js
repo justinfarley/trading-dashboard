@@ -204,18 +204,50 @@ function renderWeights(rows) {
 function renderPenalty(logs) {
   if (!logs || logs.length === 0) return;
 
-  // get the most recent log entry that has a penalty
-  const last = [...logs].reverse().find(l => l.penalty != null);
-  if (!last) return;
+  const withPenalty = [...logs].reverse().filter(l => l.penalty != null);
+  if (withPenalty.length === 0) return;
 
-  const penalty = parseFloat(last.penalty) || 0;
+  const colors = p => p > 15 ? '#ff3b5c' : p > 8 ? '#ffaa00' : '#00ff88';
+
+  // Most recent
+  const latest = withPenalty[0];
+  const penalty = parseFloat(latest.penalty) || 0;
   const pct = Math.min(100, (penalty / 20) * 100);
   const fill = document.getElementById('penaltyFill');
-  document.getElementById('penaltyLabel').textContent = "Most Recent Risk Penalty: " + last.penalty;
+  document.getElementById('penaltyLabel').textContent = 'Most Recent Risk Penalty: ' + latest.penalty;
   fill.style.width = pct + '%';
-  const color = penalty > 15 ? '#ff3b5c' : penalty > 8 ? '#ffaa00' : '#00ff88';
+  const color = colors(penalty);
   fill.style.background = color;
   fill.style.boxShadow = `0 0 8px ${color}`;
+
+  // Last 3 unique penalty values excluding the most recent
+  const seen = new Set();
+  seen.add(parseFloat(latest.penalty));
+  const prev3 = [];
+  for (let i = 1; i < withPenalty.length; i++) {
+    const p = parseFloat(withPenalty[i].penalty);
+    if (!seen.has(p)) {
+      seen.add(p);
+      prev3.push(withPenalty[i]);
+    }
+    if (prev3.length === 3) break;
+  }
+
+    [2, 3, 4].forEach((n, i) => {
+    const log = prev3[i];
+    const prevTrack = document.getElementById(`penaltyFill${n}`)?.closest('.penalty-track.prev');
+    if (!prevTrack) return;
+    if (log) {
+        const p = parseFloat(log.penalty) || 0;
+        prevTrack.style.display = 'block';
+        const prevFill = document.getElementById(`penaltyFill${n}`);
+        prevFill.style.width = Math.min(100, (p / 20) * 100) + '%';
+        prevFill.style.background = colors(p);
+        prevFill.style.boxShadow = `0 0 6px ${colors(p)}`;
+    } else {
+        prevTrack.style.display = 'none';
+    }
+    });
 }
 
 function renderLogs(logs) {

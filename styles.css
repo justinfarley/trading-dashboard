@@ -453,6 +453,29 @@
       margin: 0;
     }
 
+    .penalty-history-wrapper {
+        position: relative;
+    }
+
+    .penalty-history {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    .penalty-history-wrapper:hover .penalty-history {
+        display: flex;
+    }
+
+    .penalty-track.prev {
+        opacity: 0.4;
+    }
+
+    .penalty-fill-prev {
+        height: 100%;
+        transition: width 0.8s ease;
+    }
     
 
     footer {

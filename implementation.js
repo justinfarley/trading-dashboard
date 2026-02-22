@@ -4,6 +4,8 @@ const TICKERS     = ['MSFT','CSCO','JPM','WMT','PG','XOM','TLT'];
 const INITIAL_WEALTH_FALLBACK = 100000;
 
 let wealthChart = null;
+let dailyChart = null;
+let activeTab = 'biweekly';
 
 function fmt$(n) {
   if (n == null || isNaN(n)) return '—';
@@ -29,14 +31,17 @@ function parseCSV(text) {
   });
 }
 
-async function loadWealth() {
+async function loadWealthCSV() {
   try {
-    const res = await fetch('wealth.txt?t=' + Date.now());
-    if (!res.ok) return null;
+    const res = await fetch('wealth.csv?t=' + Date.now());
+    if (!res.ok) return [];
     const text = await res.text();
-    return parseFloat(text.trim());
+    return text.trim().split('\n').map(line => {
+      const parts = line.split(',');
+      return { date: parts[0].trim(), wealth: parseFloat(parts[1]) };
+    }).filter(r => !isNaN(r.wealth));
   } catch(e) {
-    return null;
+    return [];
   }
 }
 
@@ -98,6 +103,13 @@ function renderStats(rows, wealth) {
   document.getElementById('initialWealth').textContent = 'Started at ' + fmt$(initialWealth);
 }
 
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabBiweekly').classList.toggle('active', tab === 'biweekly');
+  document.getElementById('tabDaily').classList.toggle('active', tab === 'daily');
+  refresh();
+}
+
 function renderChart(rows) {
   if (!rows || rows.length === 0) return;
 
@@ -132,6 +144,83 @@ function renderChart(rows) {
         fill: true,
         pointRadius: data.length > 30 ? 0 : 3,
         pointBackgroundColor: '#00ff88',
+        tension: 0.3
+      }, {
+        data: Array(data.length).fill(initial),
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        borderDash: [4, 4],
+        pointRadius: 0,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0d1117',
+          borderColor: '#1a2332',
+          borderWidth: 1,
+          titleColor: '#c9d1d9',
+          bodyColor: '#c9d1d9',
+          callbacks: {
+            title: ctx => ctx[0].label,
+            label: ctx => ' ' + fmt$(ctx.raw)
+          }
+        }
+      },
+      scales: {
+        x: { display: false },
+        y: {
+          min: minVal - padding,
+          max: maxVal + padding,
+          grid: { color: 'rgba(26,35,50,0.6)' },
+          ticks: {
+            color: '#4a5568',
+            font: { family: 'Share Tech Mono', size: 10 },
+            callback: v => '$' + (v / 1000).toFixed(0) + 'k'
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function renderDailyChart(rows) {
+  if (!rows || rows.length === 0) return;
+
+  const labels = rows.map(r => r.date.slice(0, 10));
+  const data   = rows.map(r => r.wealth);
+  const initial = data[0] || INITIAL_WEALTH_FALLBACK;
+
+  const ctx = document.getElementById('wealthChart').getContext('2d');
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+  gradient.addColorStop(0, 'rgba(0,136,255,0.25)');
+  gradient.addColorStop(1, 'rgba(0,136,255,0)');
+
+  if (wealthChart) wealthChart.destroy();
+
+  const minVal = Math.min(...data);
+  const maxVal = Math.max(...data);
+  const range   = maxVal - minVal;
+  const padding = range < 1000 ? 500 : range * 0.1;
+
+  wealthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: '#0088ff',
+        borderWidth: 2,
+        backgroundColor: gradient,
+        fill: true,
+        pointRadius: data.length > 30 ? 0 : 3,
+        pointBackgroundColor: '#0088ff',
         tension: 0.3
       }, {
         data: Array(data.length).fill(initial),
@@ -293,14 +382,27 @@ function updateLastUpdated() {
 }
 
 async function refresh() {
-  const [rows, logs, wealth] = await Promise.all([loadAccountHistory(), loadLogs(), loadWealth()]);
-  
-  renderStats(rows, wealth);
-  renderChart(rows);
+  const [rows, logs, dailyRows] = await Promise.all([
+    loadAccountHistory(),
+    loadLogs(),
+    loadWealthCSV()
+  ]);
+
+  const liveWealth = dailyRows?.length > 0 ? dailyRows[dailyRows.length - 1].wealth : null;
+
+  renderStats(rows, liveWealth);
   renderWeights(rows);
   renderPenalty(logs);
   renderLogs(logs);
   updateLastUpdated();
+
+  if (activeTab === 'biweekly') {
+    renderChart(rows);
+    document.getElementById('chartPeriods').textContent = (rows?.length || 0) + ' periods';
+  } else {
+    renderDailyChart(dailyRows);
+    document.getElementById('chartPeriods').textContent = (dailyRows?.length || 0) + ' days';
+  }
 }
 
 refresh();

@@ -112,7 +112,10 @@
 
     /* TOP STATS ROW */
     .stats-row {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
     }
 
     .stat-card {
@@ -176,6 +179,29 @@
 
     .stat-sub.up { color: var(--accent); }
     .stat-sub.down { color: var(--danger); }
+
+    .tab-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    }
+
+    .tab-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    }
+
+    .tab-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,255,136,0.05);
+    }
 
     /* MIDDLE ROW */
     .middle-row {

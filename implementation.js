@@ -71,11 +71,15 @@ function renderStats(rows) {
     wealthChangeClass = diff >= 0 ? 'up' : 'down';
   }
 
+    document.getElementById('currentWealthLabel').innerHTML =
+        'Current Wealth <span>Last Updated on ' + last.date + '</span>';
   document.getElementById('currentWealth').textContent = fmt$(currentWealth);
   const wSub = document.getElementById('wealthChange');
   wSub.textContent = wealthChangeTxt;
   wSub.className = 'stat-sub ' + wealthChangeClass;
 
+  document.getElementById('totalReturnLabel').innerHTML = 
+        'Total Return <span>Last Updated on ' + last.date + '</span>';
   const retEl = document.getElementById('totalReturn');
   dollarReturn = currentWealth - initialWealth;
   retEl.textContent = fmtPct(totalReturn) + ' / ' + fmt$(dollarReturn);

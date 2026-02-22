@@ -62,7 +62,7 @@
       <hr class="section-divider"/>
 
       <div class="penalty-section">
-        <div class="penalty-label">Most Recent Risk Penalty</div>
+        <div class="penalty-label" id="penaltyLabel">Most Recent Risk Penalty</div>
         <div class="penalty-track">
           <div class="penalty-fill" id="penaltyFill" style="width:0%"></div>
         </div>
@@ -89,12 +89,11 @@
             <th>Qty</th>
             <th>Price</th>
             <th>Value</th>
-            <th>Penalty</th>
           </tr>
         </thead>
         <tbody id="logBody">
           <tr>
-            <td colspan="7">
+            <td colspan="6">
               <div class="empty-state">
                 <span class="big">◌</span>
                 No trade logs found. Run the trading script to populate.

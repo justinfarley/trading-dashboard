@@ -196,6 +196,7 @@ function renderPenalty(logs) {
   const penalty = parseFloat(last.penalty) || 0;
   const pct = Math.min(100, (penalty / 20) * 100);
   const fill = document.getElementById('penaltyFill');
+  document.getElementById('penaltyLabel').textContent = "Most Recent Risk Penalty: " + last.penalty;
   fill.style.width = pct + '%';
   const color = penalty > 15 ? '#ff3b5c' : penalty > 8 ? '#ffaa00' : '#00ff88';
   fill.style.background = color;
@@ -235,7 +236,6 @@ function renderLogs(logs) {
       <td class="qty-cell">${qty}</td>
       <td class="price-cell">${price}</td>
       <td class="price-cell">${value}</td>
-      <td style="color:var(--warn)">${penalty}</td>
     </tr>`;
   }).join('');
 }

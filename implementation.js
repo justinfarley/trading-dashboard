@@ -235,7 +235,7 @@ function renderLogs(logs) {
       <td class="ticker-cell">${log.ticker || '—'}</td>
       <td class="qty-cell">${qty}</td>
       <td class="price-cell">${price}</td>
-      <td class="price-cell">${value}</td>
+      <td style="color:var(--warn)" class="price-cell">${value}</td>
     </tr>`;
   }).join('');
 }

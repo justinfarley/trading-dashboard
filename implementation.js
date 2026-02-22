@@ -242,7 +242,7 @@ function renderLogs(logs) {
 
 function updateLastUpdated() {
   const el = document.getElementById('lastUpdate');
-  el.textContent = 'LAST SYNC: ' + new Date().toUTCString().slice(0, 25).toUpperCase();
+  el.textContent = 'LAST SYNC: ' + new Date().toLocaleString().slice(0, 25).toUpperCase();
 }
 
 async function refresh() {

@@ -420,6 +420,31 @@
       margin: 0;
     }
 
+    footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 16px 40px;
+    margin-top: 40px;
+    }
+
+    .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 1000px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+    }
+
     /* RESPONSIVE */
     @media (max-width: 1000px) {
       .stats-row { grid-template-columns: repeat(2, 1fr); }

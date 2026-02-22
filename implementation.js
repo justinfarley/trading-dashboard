@@ -29,6 +29,17 @@ function parseCSV(text) {
   });
 }
 
+async function loadWealth() {
+  try {
+    const res = await fetch('wealth.txt?t=' + Date.now());
+    if (!res.ok) return null;
+    const text = await res.text();
+    return parseFloat(text.trim());
+  } catch(e) {
+    return null;
+  }
+}
+
 async function loadAccountHistory() {
   try {
     const res = await fetch(ACCOUNT_CSV + '?t=' + Date.now());
@@ -50,14 +61,14 @@ async function loadLogs() {
   }
 }
 
-function renderStats(rows) {
+function renderStats(rows, wealth) {
   if (!rows || rows.length === 0) return;
 
   const first = rows[0];
   const last  = rows[rows.length - 1];
 
   const initialWealth = parseFloat(first.wealth) || INITIAL_WEALTH_FALLBACK;
-  const currentWealth = parseFloat(last.wealth)  || 0;
+  const currentWealth = wealth  || 0;
   const totalReturn   = ((currentWealth - initialWealth) / initialWealth) * 100;
 
   // Wealth change from previous period
@@ -250,9 +261,9 @@ function updateLastUpdated() {
 }
 
 async function refresh() {
-  const [rows, logs] = await Promise.all([loadAccountHistory(), loadLogs()]);
-
-  renderStats(rows);
+  const [rows, logs, wealth] = await Promise.all([loadAccountHistory(), loadLogs(), loadWealth()]);
+  
+  renderStats(rows, wealth);
   renderChart(rows);
   renderWeights(rows);
   renderPenalty(logs);

@@ -66,6 +66,25 @@ async function loadLogs() {
   }
 }
 
+function animateCounter(elementId, targetValue) {
+  const el = document.getElementById(elementId);
+  const duration = 1200;
+  const start = performance.now();
+  const startValue = 0;
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease out
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(startValue + (targetValue - startValue) * eased);
+    el.textContent = (current < 0 ? '-$' : '$') + Math.abs(current).toLocaleString('en-US');
+    if (progress < 1) requestAnimationFrame(update);
+  }
+
+  requestAnimationFrame(update);
+}
+
 function renderStats(rows, wealth) {
   if (!rows || rows.length === 0) return;
 
@@ -89,7 +108,7 @@ function renderStats(rows, wealth) {
 
     document.getElementById('currentWealthLabel').innerHTML =
         'Current Wealth <span>Last Updated on Previous Market Close</span>';
-  document.getElementById('currentWealth').textContent = fmt$(currentWealth);
+    animateCounter('currentWealth', currentWealth);
   const wSub = document.getElementById('wealthChange');
   wSub.textContent = wealthChangeTxt;
   wSub.className = 'stat-sub ' + wealthChangeClass;
@@ -366,7 +385,7 @@ function renderLogs(logs) {
     const ts         = log.timestamp ? log.timestamp.replace('T', ' ').slice(0, 19) : '—';
 
     return `<tr>
-      <td class="timestamp">${ts}</td>
+      <td class="timestamp">${ts}</td>  
       <td><span class="action-badge ${badgeClass}">${(log.action||'—').toUpperCase()}</span></td>
       <td class="ticker-cell">${log.ticker || '—'}</td>
       <td class="qty-cell">${qty}</td>

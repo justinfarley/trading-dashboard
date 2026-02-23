@@ -90,7 +90,7 @@ function animateCounter(elementId, targetValue) {
 function renderStats(rows, wealth, timestamp) {
   if (!rows || rows.length === 0) return;   
 
-  const timestampTxt = timestamp ? `Last Updated ${timestamp}` : 'Last Updated on Previous Market Close';
+  const timestampTxt = timestamp ? `${timestamp}` : 'Last Updated on Previous Market Close';
 
   const first = rows[0];
   const last  = rows[rows.length - 1];

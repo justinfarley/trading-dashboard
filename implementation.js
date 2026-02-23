@@ -469,6 +469,7 @@ async function refresh() {
   renderPenalty(logs);
   renderLogs(logs);
   updateLastUpdated();
+  renderCountdown();
 
   if (activeTab === 'biweekly') {
     renderChart(rows);

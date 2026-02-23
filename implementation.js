@@ -47,6 +47,20 @@ async function loadWealthCSV() {
   }
 }
 
+async function loadDailyCSV() {
+  try {
+    const res = await fetch('wealth.csv?t=' + Date.now());
+    if (!res.ok) return [];
+    const text = await res.text();
+    return text.trim().split('\n').map(line => {
+      const parts = line.split(',');
+      return { date: parts[0].trim(), wealth: parseFloat(parts[1]) };
+    }).filter(r => !isNaN(r.wealth));
+  } catch(e) {
+    return [];
+  }
+}
+
 async function loadAccountHistory() {
   try {
     const res = await fetch(ACCOUNT_CSV + '?t=' + Date.now());
@@ -440,18 +454,17 @@ function renderCountdown() {
 }
 
 async function refresh() {
-  const [rows, logs, liveData] = await Promise.all([
+  const [rows, logs, liveData, dailyRows] = await Promise.all([
     loadAccountHistory(),
     loadLogs(),
-    loadWealthCSV()
+    loadWealthCSV(),
+    loadDailyCSV()
   ]);
 
   const liveWealth = liveData.wealth;
   const liveTimestamp = liveData?.timestamp;
 
   renderStats(rows, liveWealth, liveTimestamp);
-  renderCountdown();
-  setInterval(renderCountdown, 60000);
   renderWeights(rows);
   renderPenalty(logs);
   renderLogs(logs);
@@ -461,8 +474,8 @@ async function refresh() {
     renderChart(rows);
     document.getElementById('chartPeriods').textContent = (rows?.length || 0) + ' periods';
   } else {
-    renderDailyChart(liveData);
-    document.getElementById('chartPeriods').textContent = (liveData?.length || 0) + ' days';
+    renderDailyChart(dailyRows);
+    document.getElementById('chartPeriods').textContent = (dailyRows?.length || 0) + ' days';
   }
 }
 

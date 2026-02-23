@@ -33,7 +33,7 @@ function parseCSV(text) {
 
 async function loadWealthCSV() {
   try {
-    const res = await fetch('wealth.csv?t=' + Date.now());
+    const res = await fetch('wealth_live.csv?t=' + Date.now());
     if (!res.ok) return [];
     const text = await res.text();
     return text.trim().split('\n').map(line => {

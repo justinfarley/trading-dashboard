@@ -34,14 +34,16 @@ function parseCSV(text) {
 async function loadWealthCSV() {
   try {
     const res = await fetch('wealth_live.csv?t=' + Date.now());
-    if (!res.ok) return [];
+    if (!res.ok) return { wealth: null, timestamp: null };
     const text = await res.text();
-    return text.trim().split('\n').map(line => {
-      const parts = line.split(',');
-      return { date: parts[0].trim(), wealth: parseFloat(parts[1]) };
-    }).filter(r => !isNaN(r.wealth));
+    const lines = text.trim().split('\n').filter(l => l.trim());
+    const last = lines[lines.length - 1].split(',');
+    return {
+      wealth: parseFloat(last[1]) || null,
+      timestamp: last[0]?.trim() || null
+    };
   } catch(e) {
-    return [];
+    return { wealth: null, timestamp: null };
   }
 }
 
@@ -85,8 +87,10 @@ function animateCounter(elementId, targetValue) {
   requestAnimationFrame(update);
 }
 
-function renderStats(rows, wealth) {
-  if (!rows || rows.length === 0) return;
+function renderStats(rows, wealth, timestamp) {
+  if (!rows || rows.length === 0) return;   
+
+  const timestampTxt = timestamp ? `Last Updated ${timestamp}` : 'Last Updated on Previous Market Close';
 
   const first = rows[0];
   const last  = rows[rows.length - 1];
@@ -107,14 +111,14 @@ function renderStats(rows, wealth) {
   }
 
     document.getElementById('currentWealthLabel').innerHTML =
-        'Current Wealth <span>Last Updated on Previous Market Close</span>';
+        'Current Wealth <span>Last Updated at ' + timestampTxt + '</span>';
     animateCounter('currentWealth', currentWealth);
   const wSub = document.getElementById('wealthChange');
   wSub.textContent = wealthChangeTxt;
   wSub.className = 'stat-sub ' + wealthChangeClass;
 
   document.getElementById('totalReturnLabel').innerHTML = 
-        'Total Return <span>Last Updated on Previous Market Close</span>';
+        'Total Return <span>Last Updated at ' + timestampTxt + '</span>';
   const retEl = document.getElementById('totalReturn');
   dollarReturn = currentWealth - initialWealth;
   retEl.textContent = fmtPct(totalReturn) + ' / ' + fmt$(dollarReturn);
@@ -436,15 +440,16 @@ function renderCountdown() {
 }
 
 async function refresh() {
-  const [rows, logs, dailyRows] = await Promise.all([
+  const [rows, logs, liveData] = await Promise.all([
     loadAccountHistory(),
     loadLogs(),
     loadWealthCSV()
   ]);
 
-  const liveWealth = dailyRows?.length > 0 ? dailyRows[dailyRows.length - 1].wealth : null;
+  const liveWealth = liveData.wealth;
+  const liveTimestamp = liveData?.timestamp;
 
-  renderStats(rows, liveWealth);
+  renderStats(rows, liveWealth, liveTimestamp);
   renderCountdown();
   setInterval(renderCountdown, 60000);
   renderWeights(rows);
@@ -456,8 +461,8 @@ async function refresh() {
     renderChart(rows);
     document.getElementById('chartPeriods').textContent = (rows?.length || 0) + ' periods';
   } else {
-    renderDailyChart(dailyRows);
-    document.getElementById('chartPeriods').textContent = (dailyRows?.length || 0) + ' days';
+    renderDailyChart(liveData);
+    document.getElementById('chartPeriods').textContent = (liveData?.length || 0) + ' days';
   }
 }
 

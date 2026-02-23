@@ -86,18 +86,18 @@ function animateCounter(elementId, targetValue) {
   const el = document.getElementById(elementId);
   const duration = 1200;
   const start = performance.now();
-  const startValue = 0;
 
   function update(now) {
     const elapsed = now - start;
     const progress = Math.min(elapsed / duration, 1);
-    // ease out
     const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.round(startValue + (targetValue - startValue) * eased);
-    el.textContent = (current < 0 ? '-$' : '$') + Math.abs(current).toLocaleString('en-US');
+    const current = startValue + (targetValue - startValue) * eased;
+    const abs = Math.abs(current);
+    el.textContent = (current < 0 ? '-$' : '$') + abs.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     if (progress < 1) requestAnimationFrame(update);
   }
 
+  const startValue = 0;
   requestAnimationFrame(update);
 }
 

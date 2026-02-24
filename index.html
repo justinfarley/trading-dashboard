@@ -1,132 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TRADING DASHBOARD</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TRADING DASHBOARD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<div class="scanline"></div>
+    <div class="scanline"></div>
 
-<header>
-  <div class="logo">TRADING DASHBOARD</div>
-  <div class="status-bar">
-    <div><span class="status-dot"></span> PAPER TRADING</div>
-    <div class="next-trade" id="nextTradeCountdown">—</div>
-    <div class="last-update" id="lastUpdate">LOADING...</div>
-  </div>
-</header>
-
-<main>
-
-  <!-- STAT CARDS -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label" id="currentWealthLabel">Current Wealth</div>
-      <div class="stat-value" id="currentWealth">—</div>
-      <div class="stat-sub" id="wealthChange">—</div>
-    </div>
-    <div class="stat-card blue">
-      <div class="stat-label" id="totalReturnLabel">Total Return</div>
-      <div class="stat-value" id="totalReturn">—</div>
-      <div class="stat-sub" id="initialWealth">—</div>
-    </div>
-  </div>
-
-  <!-- CHART + WEIGHTS -->
-  <div class="middle-row">
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">Wealth Over Time</span>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="tab-btn active" id="tabBiweekly" onclick="switchTab('biweekly')">BI-WEEKLY</button>
-          <button class="tab-btn" id="tabDaily" onclick="switchTab('daily')">DAILY</button>
-          <span class="panel-badge" id="chartPeriods">— periods</span>
+    <header>
+        <div class="logo">TRADING DASHBOARD</div>
+        <div class="status-bar">
+            <div><span class="status-dot"></span> PAPER TRADING</div>
+            <div class="next-trade" id="nextTradeCountdown">—</div>
+            <div class="last-update" id="lastUpdate">LOADING...</div>
         </div>
-      </div>
-      <div class="chart-container">
-        <canvas id="wealthChart"></canvas>
-      </div>
-    </div>
+    </header>
 
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">Current Weights</span>
-        <span class="panel-badge">LATEST</span>
-      </div>
-      <div class="weights-container" id="weightsContainer">
-        <div class="empty-state" style="padding:30px">
-          <span style="color:var(--border);font-size:24px;display:block;margin-bottom:8px">▓▓▓</span>
-          No data yet
+    <main>
+
+        <!-- STAT CARDS -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label" id="currentWealthLabel">Current Wealth</div>
+                <div class="stat-value" id="currentWealth">—</div>
+                <div class="stat-sub" id="wealthChange">—</div>
+            </div>
+            <div class="stat-card blue">
+                <div class="stat-label" id="totalReturnLabel">Total Return</div>
+                <div class="stat-value" id="totalReturn">—</div>
+                <div class="stat-sub" id="initialWealth">—</div>
+            </div>
         </div>
-      </div>
 
-      <hr class="section-divider"/>
+        <!-- CHART + WEIGHTS -->
+        <div class="middle-row">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Wealth Over Time</span>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button class="tab-btn active" id="tabBiweekly"
+                            onclick="switchTab('biweekly')">BI-WEEKLY</button>
+                        <button class="tab-btn" id="tabDaily" onclick="switchTab('daily')">DAILY</button>
+                        <span class="panel-badge" id="chartPeriods">— periods</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="wealthChart"></canvas>
+                </div>
+            </div>
 
-      <div class="penalty-section">
-        <div class="penalty-label" id="penaltyLabel">Most Recent Risk Penalty</div>
-        <div class="penalty-history-wrapper">
-          <div class="penalty-track">
-            <div class="penalty-fill" id="penaltyFill" style="width:0%"></div>
-          </div>
-          <div class="penalty-history" id="penaltyHistory">
-            <div class="penalty-track prev"><div class="penalty-fill-prev" id="penaltyFill2" style="width:0%"></div></div>
-            <div class="penalty-track prev"><div class="penalty-fill-prev" id="penaltyFill3" style="width:0%"></div></div>
-            <div class="penalty-track prev"><div class="penalty-fill-prev" id="penaltyFill4" style="width:0%"></div></div>
-          </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Current Weights</span>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button class="tab-btn active" id="tabWeightsLatest"
+                            onclick="switchWeightsTab('latest')">LATEST</button>
+                        <button class="tab-btn" id="tabWeightsHistory" onclick="switchWeightsTab('history')">OVER
+                            TIME</button>
+                    </div>
+                </div>
+
+                <div id="weightsLatestView">
+                    <div class="weights-container" id="weightsContainer">
+                        <div class="empty-state" style="padding:30px">
+                            <span style="color:var(--border);font-size:24px;display:block;margin-bottom:8px">▓▓▓</span>
+                            No data yet
+                        </div>
+                    </div>
+                </div>
+
+                <div id="weightsHistoryView" style="display:none">
+                    <div style="padding:20px;height:260px;position:relative">
+                        <canvas id="weightsChart"></canvas>
+                    </div>
+                </div>
+
+                <hr class="section-divider" />
+
+                <div class="penalty-section">
+                    <div class="penalty-label" id="penaltyLabel">Most Recent Risk Penalty</div>
+                    <div class="penalty-history-wrapper">
+                        <div class="penalty-track">
+                            <div class="penalty-fill" id="penaltyFill" style="width:0%"></div>
+                        </div>
+                        <div class="penalty-history" id="penaltyHistory">
+                            <div class="penalty-track prev">
+                                <div class="penalty-fill-prev" id="penaltyFill2" style="width:0%"></div>
+                            </div>
+                            <div class="penalty-track prev">
+                                <div class="penalty-fill-prev" id="penaltyFill3" style="width:0%"></div>
+                            </div>
+                            <div class="penalty-track prev">
+                                <div class="penalty-fill-prev" id="penaltyFill4" style="width:0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="penalty-ticks">
+                        <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRADE LOG -->
+            <div class="log-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Trade Log</span>
+                    <span class="panel-badge" id="logCount">0 entries</span>
+                </div>
+                <div class="scroll-wrapper">
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th><span>Timestamp</span></th>
+                                <th><span class="th-wrapper">Action<span class="tooltip">BUY or SELL order
+                                            type</span></span></th>
+                                <th><span class="th-wrapper">Ticker<span class="tooltip">Stock symbol
+                                            traded</span></span></th>
+                                <th><span class="th-wrapper">Qty<span class="tooltip">Number of shares
+                                            traded</span></span></th>
+                                <th><span class="th-wrapper">Price<span class="tooltip">Price per share at time of
+                                            trade</span></span></th>
+                                <th><span class="th-wrapper">Value<span class="tooltip">Total dollar value of the trade
+                                            (Qty × Price)</span></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="logBody">
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <span class="big">◌</span>
+                                        No trade logs found. Run the trading script to populate.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script src="implementation.js"></script>
+
+    <footer>
+        <div class="footer-content">
+            <span>© 2026 Justin Farley, Ethan Baratz</span>
+            <span>LSMC Portfolio Optimization</span>
         </div>
-        <div class="penalty-ticks">
-          <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TRADE LOG -->
-  <div class="log-panel">
-    <div class="panel-header">
-      <span class="panel-title">Trade Log</span>
-      <span class="panel-badge" id="logCount">0 entries</span>
-    </div>
-    <div class="scroll-wrapper">
-      <table class="log-table">
-        <thead>
-            <tr>
-            <th><span>Timestamp</span></th>
-            <th><span class="th-wrapper">Action<span class="tooltip">BUY or SELL order type</span></span></th>
-            <th><span class="th-wrapper">Ticker<span class="tooltip">Stock symbol traded</span></span></th>
-            <th><span class="th-wrapper">Qty<span class="tooltip">Number of shares traded</span></span></th>
-            <th><span class="th-wrapper">Price<span class="tooltip">Price per share at time of trade</span></span></th>
-            <th><span class="th-wrapper">Value<span class="tooltip">Total dollar value of the trade (Qty × Price)</span></span></th>
-            </tr>
-        </thead>
-        <tbody id="logBody">
-          <tr>
-            <td colspan="6">
-              <div class="empty-state">
-                <span class="big">◌</span>
-                No trade logs found. Run the trading script to populate.
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</main>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<script src="implementation.js"></script>
-
-<footer>
-  <div class="footer-content">
-    <span>© 2026 Justin Farley, Ethan Baratz</span>
-    <span>LSMC Portfolio Optimization</span>
-  </div>
-</footer>
+    </footer>
 </body>
+
 </html>

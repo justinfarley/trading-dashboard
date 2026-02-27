@@ -75,6 +75,7 @@ function renderWeightsChart(rows) {
                     ticks: {
                         color: '#4a5568',
                         font: { family: 'Share Tech Mono', size: 10 },
+                        maxTicksLimit: 6,
                         callback: v => v + '%'
                     },
                     border: { display: false }
@@ -300,7 +301,8 @@ function renderChart(rows) {
                     ticks: {
                         color: '#4a5568',
                         font: { family: 'Share Tech Mono', size: 10 },
-                        callback: v => '$' + (v / 1000).toFixed(0) + 'k'
+                        maxTicksLimit: 6,
+                        callback: v => '$' + (v / 1000).toFixed(1) + 'k'
                     },
                     border: { display: false }
                 }
@@ -377,7 +379,7 @@ function renderDailyChart(rows) {
                     ticks: {
                         color: '#4a5568',
                         font: { family: 'Share Tech Mono', size: 10 },
-                        callback: v => '$' + (v / 1000).toFixed(0) + 'k'
+                        callback: v => '$' + (v / 1000).toFixed(1) + 'k'
                     },
                     border: { display: false }
                 }

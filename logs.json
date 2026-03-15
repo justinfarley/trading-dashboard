@@ -94,5 +94,53 @@
     "qty": 1,
     "price": 90.87,
     "penalty": 2.6998998427915484
+  },
+  {
+    "timestamp": "2026-03-15 09:09:20 AM EDT",
+    "action": "BUY",
+    "ticker": "MSFT",
+    "qty": 5,
+    "price": 395.53,
+    "penalty": 6.175046224453403
+  },
+  {
+    "timestamp": "2026-03-15 09:09:22 AM EDT",
+    "action": "SELL",
+    "ticker": "CSCO",
+    "qty": 2,
+    "price": 78.32,
+    "penalty": 6.175046224453403
+  },
+  {
+    "timestamp": "2026-03-15 09:09:27 AM EDT",
+    "action": "SELL",
+    "ticker": "WMT",
+    "qty": 13,
+    "price": 126.525,
+    "penalty": 6.175046224453403
+  },
+  {
+    "timestamp": "2026-03-15 09:09:29 AM EDT",
+    "action": "SELL",
+    "ticker": "PG",
+    "qty": 12,
+    "price": 150.605,
+    "penalty": 6.175046224453403
+  },
+  {
+    "timestamp": "2026-03-15 09:09:31 AM EDT",
+    "action": "BUY",
+    "ticker": "XOM",
+    "qty": 5,
+    "price": 156.14,
+    "penalty": 6.175046224453403
+  },
+  {
+    "timestamp": "2026-03-15 09:09:33 AM EDT",
+    "action": "BUY",
+    "ticker": "TLT",
+    "qty": 8,
+    "price": 86.54,
+    "penalty": 6.175046224453403
   }
 ]

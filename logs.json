@@ -326,5 +326,29 @@
     "qty": 19,
     "price": 83.66,
     "penalty": 2.5683314141524582
+  },
+  {
+    "timestamp": "2026-06-01 09:08:47 AM EDT",
+    "action": "BUY",
+    "ticker": "PG",
+    "qty": 1,
+    "price": 143.56,
+    "penalty": 2.6974871983873645
+  },
+  {
+    "timestamp": "2026-06-01 09:08:49 AM EDT",
+    "action": "SELL",
+    "ticker": "XOM",
+    "qty": 5,
+    "price": 146.67,
+    "penalty": 2.6974871983873645
+  },
+  {
+    "timestamp": "2026-06-01 09:08:52 AM EDT",
+    "action": "BUY",
+    "ticker": "TLT",
+    "qty": 2,
+    "price": 85.42,
+    "penalty": 2.6974871983873645
   }
 ]
